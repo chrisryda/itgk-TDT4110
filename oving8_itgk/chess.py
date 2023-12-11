@@ -3,8 +3,6 @@ from enum import Enum
 class White(Enum):
     def __str__(self) -> str:
         return "White " + self.name
-    
-    WHITE = 0
     PAWN = 1
     KNIGHT = 2
     BISHOP = 3
@@ -14,9 +12,7 @@ class White(Enum):
 
 class Black(Enum):
     def __str__(self) -> str:
-        return self.name
-    
-    BLACK = 0
+        return "Black " + self.name
     PAWN = 1
     KNIGHT = 2
     BISHOP = 3
@@ -83,8 +79,13 @@ def is_valid_input(s : str) -> bool:
             return False
     return True
 
-def is_valid_move(board : list, from_s : str, to_s : str, piece):
-    return NotImplementedError
+def is_valid_move(board : list, from_s : str, to_s : str):
+    piece = get_piece(board, from_s)
+    dest = get_piece(board, to_s)
+    if isinstance(dest, type(piece)):
+        return False
+    # TODO: do 
+    return True
 
 def translate(s : str) -> (int, int):
     x = 8 - int(s[1])
@@ -106,7 +107,7 @@ def chess():
     b = make_board()
     print_board(b)
     print("\n\n")
-    players = [White.WHITE, Black.BLACK]
+    players = ["White", "Black"]
     p = 0
     contd = True
     while contd:
@@ -115,9 +116,15 @@ def chess():
         if not is_valid_input(move):
             print("Invalid input\n")
             continue
-        # TODO: check valid move
         move_from, move_to = move.split(" ")[0], move.split(" ")[1]
+        if not is_valid_move(b, move_from, move_to):
+            print("Invalid move\n")
+            continue
+        
+        move_piece(b, move_from, move_to)
         print(f"Move from {move_from}, move to {move_to}") 
+        print("\n\n")
+        print_board(b)
         print("\n\n")
         p += 1
     
